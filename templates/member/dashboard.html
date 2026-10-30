@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard — YogaCare{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>🙏 Welcome, {{ session.get('user_name') }}</h1>
+        <p>Your wellness journey continues. Here's your activity at a glance.</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-4">
+            <div class="stat-card stat-teal">
+                <div class="stat-icon">📅</div>
+                <div class="stat-number">{{ total }}</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="stat-card stat-green">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number">{{ approved }}</div>
+                <div class="stat-label">Approved</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="stat-card stat-accent">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number">{{ pending }}</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Sessions -->
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card-yoga">
+                <div class="card-header">📅 Upcoming Approved Sessions</div>
+                <div class="card-body">
+                    {% if upcoming %}
+                        {% for s in upcoming %}
+                        <div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-3" style="background:var(--light);">
+                            <div style="font-size:2rem;">
+                                {% if s.class_name %}🧘{% else %}💆{% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <strong>{{ s.class_name or s.therapy_name }}</strong>
+                                <div class="text-muted small">
+                                    <i class="bi bi-calendar3 me-1"></i>{{ s.session_date }}
+                                    &nbsp;·&nbsp;
+                                    <i class="bi bi-clock me-1"></i>{{ s.time_slot|clock }}
+                                </div>
+                            </div>
+                            <span class="badge-yoga badge-approved">Approved</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <div style="font-size:2.5rem;">🌟</div>
+                            <p class="mt-2 mb-3">No upcoming sessions yet.</p>
+                            <a href="{{ url_for('member.classes') }}" class="btn-yoga-primary px-4 py-2">
+                                Browse Classes
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-lg-5">
+            <div class="card-yoga">
+                <div class="card-header">🚀 Quick Actions</div>
+                <div class="card-body d-grid gap-3">
+                    <a href="{{ url_for('member.classes') }}" class="btn-yoga-primary d-flex align-items-center gap-2 py-2 px-3">
+                        <i class="bi bi-collection fs-5"></i>
+                        <div>
+                            <div class="fw-bold">Browse Yoga Classes</div>
+                            <small style="opacity:0.8;">Find and book a class</small>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('member.therapies') }}" class="btn-yoga-outline d-flex align-items-center gap-2 py-2 px-3">
+                        <i class="bi bi-heart-pulse fs-5"></i>
+                        <div>
+                            <div class="fw-bold">Explore Therapies</div>
+                            <small class="text-muted">Book a therapy session</small>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('member.bmi_calculator') }}" class="btn-yoga-outline d-flex align-items-center gap-2 py-2 px-3">
+                        <i class="bi bi-calculator fs-5"></i>
+                        <div>
+                            <div class="fw-bold">BMI Calculator</div>
+                            <small class="text-muted">Get personalised suggestions</small>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('member.asana_library') }}" class="btn-yoga-outline d-flex align-items-center gap-2 py-2 px-3">
+                        <i class="bi bi-book fs-5"></i>
+                        <div>
+                            <div class="fw-bold">Asana Library</div>
+                            <small class="text-muted">Explore 12+ yoga poses</small>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('member.feedback') }}" class="btn-yoga-outline d-flex align-items-center gap-2 py-2 px-3">
+                        <i class="bi bi-star fs-5"></i>
+                        <div>
+                            <div class="fw-bold">Submit Feedback</div>
+                            <small class="text-muted">Rate your sessions</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

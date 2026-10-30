@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YogaCare — Yoga & Therapy Center. Find your balance, restore your peace. Book sessions, explore asanas, and transform your wellness journey.">
+    <title>YogaCare — Yoga & Therapy Center</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ══════════════ MINIMAL NAVBAR (public page) ══════════════ -->
+<nav class="navbar navbar-expand-lg navbar-yoga" style="position:fixed;width:100%;top:0;z-index:1000;">
+    <div class="container">
+        <a class="navbar-brand-yoga" href="{{ url_for('index') }}">
+            <span class="brand-icon">🧘</span> YogaCare
+        </a>
+        <div class="ms-auto d-flex gap-2">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-sm rounded-pill px-3">Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-sm rounded-pill px-3"
+               style="background:var(--accent);color:var(--dark);font-weight:700;">Join Free</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ══════════════ HERO SECTION ══════════════════════════════ -->
+<section class="hero" style="padding-top:80px;">
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="fade-in-up">
+                    <p class="mb-2" style="color:var(--accent);font-weight:600;letter-spacing:2px;font-size:0.85rem;text-transform:uppercase;">
+                        ✦ Wellness Begins Here
+                    </p>
+                    <h1 class="hero-title">
+                        Find Your <span class="accent-word">Balance</span>,<br>
+                        Restore Your <span class="accent-word">Peace</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        A complete wellness centre offering expert-led yoga classes, therapeutic
+                        treatments, and personalised health guidance — all in one serene space.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{{ url_for('auth.register') }}"
+                           class="btn btn-lg rounded-pill px-4 fw-bold"
+                           style="background:var(--accent);color:var(--dark);">
+                            Start Your Journey <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <a href="{{ url_for('auth.login') }}"
+                           class="btn btn-lg btn-outline-light rounded-pill px-4">
+                            Member Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-float">🧘</div>
+</section>
+
+<!-- ══════════════ FEATURES ══════════════════════════════════ -->
+<section class="py-6" style="padding:5rem 0;background:var(--light);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 style="font-size:2rem;">Everything You Need to <span style="color:var(--primary);">Thrive</span></h2>
+            <p class="text-muted">A holistic platform built for your wellness journey</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🧘</div>
+                    <h5 class="fw-bold mb-2">Yoga Classes</h5>
+                    <p class="text-muted small">From beginner Hatha to advanced Ashtanga — find the perfect class for your level and goals.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">💆</div>
+                    <h5 class="fw-bold mb-2">Therapy Services</h5>
+                    <p class="text-muted small">Abhyanga massage, Shirodhara, acupressure, and sound healing to restore body and mind.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h5 class="fw-bold mb-2">Easy Booking</h5>
+                    <p class="text-muted small">Book sessions in seconds, track your schedule, and cancel if plans change — all online.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">⚖️</div>
+                    <h5 class="fw-bold mb-2">BMI Calculator</h5>
+                    <p class="text-muted small">Calculate your BMI and get personalised yoga class recommendations tailored to your health goals.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h5 class="fw-bold mb-2">Asana Library</h5>
+                    <p class="text-muted small">Explore 12+ yoga poses with detailed benefits, precautions, and difficulty ratings.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h5 class="fw-bold mb-2">Share Feedback</h5>
+                    <p class="text-muted small">Rate your sessions, leave comments, and help us continuously improve your experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ STATS BAR ═════════════════════════════════ -->
+<section style="background:linear-gradient(135deg, var(--dark), var(--primary));padding:3rem 0;color:white;">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-6 col-md-3">
+                <div style="font-size:2.5rem;font-weight:700;font-family:'Poppins',sans-serif;">5+</div>
+                <div style="opacity:0.8;font-size:0.9rem;">Yoga Classes</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="font-size:2.5rem;font-weight:700;font-family:'Poppins',sans-serif;">4+</div>
+                <div style="opacity:0.8;font-size:0.9rem;">Therapy Services</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="font-size:2.5rem;font-weight:700;font-family:'Poppins',sans-serif;">2+</div>
+                <div style="opacity:0.8;font-size:0.9rem;">Expert Instructors</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="font-size:2.5rem;font-weight:700;font-family:'Poppins',sans-serif;">12+</div>
+                <div style="opacity:0.8;font-size:0.9rem;">Asanas in Library</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ CTA ════════════════════════════════════════ -->
+<section style="padding:4.5rem 0;background:white;">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2>How It <span style="color:var(--primary);">Works</span></h2>
+            <p class="text-muted">From sign-up to your first session in four simple steps</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-lg-3 col-sm-6"><div class="how-step"><div class="how-num">1</div><h5>Create an account</h5><p class="text-muted small mb-0">Register for free as a member in under a minute.</p></div></div>
+            <div class="col-lg-3 col-sm-6"><div class="how-step"><div class="how-num">2</div><h5>Find your practice</h5><p class="text-muted small mb-0">Browse classes and therapies, or use the BMI calculator for a suggestion.</p></div></div>
+            <div class="col-lg-3 col-sm-6"><div class="how-step"><div class="how-num">3</div><h5>Book a session</h5><p class="text-muted small mb-0">Pick a date. We show the seats left, and the admin approves your booking.</p></div></div>
+            <div class="col-lg-3 col-sm-6"><div class="how-step"><div class="how-num">4</div><h5>Attend and review</h5><p class="text-muted small mb-0">Your instructor marks attendance, then you can rate the session.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:5rem 0;background:white;">
+    <div class="container text-center">
+        <h2 style="font-size:2rem;margin-bottom:1rem;">Ready to Begin Your Wellness Journey?</h2>
+        <p class="text-muted mb-4">Join today — registration is free and takes less than a minute.</p>
+        <a href="{{ url_for('auth.register') }}"
+           class="btn btn-lg rounded-pill px-5 fw-bold"
+           style="background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;">
+            Create Your Account <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-yoga">
+    <div class="container">
+        <p class="mb-0">🧘 <strong>YogaCare</strong> — Yoga & Therapy Center Management System &nbsp;|&nbsp; MCA Mini Project © 2024</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Class — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-{% if action=='Add' %}plus-circle{% else %}pencil{% endif %} me-2"></i>{{ action }} Yoga Class</h1>
+        <p>{{ 'Create a new yoga class.' if action=='Add' else 'Update class details.' }}</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-card">
+        <form method="POST" class="form-yoga">
+            <div class="row g-3">
+
+                <div class="col-12">
+                    <label for="class_name" class="form-label">Class Name *</label>
+                    <input type="text" class="form-control" id="class_name" name="class_name"
+                           value="{{ cls.get('class_name','') }}" required placeholder="e.g. Morning Hatha Flow">
+                </div>
+
+                <div class="col-12">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description"
+                              rows="3" placeholder="Brief description of the class…">{{ cls.get('description','') }}</textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="instructor_id" class="form-label">Instructor</label>
+                    <select class="form-select" id="instructor_id" name="instructor_id">
+                        <option value="">— Select Instructor —</option>
+                        {% for inst in instructors %}
+                        <option value="{{ inst.instructor_id }}"
+                            {% if cls.get('instructor_id') == inst.instructor_id %}selected{% endif %}>
+                            {{ inst.full_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="day_of_week" class="form-label">Day *</label>
+                    <select class="form-select" id="day_of_week" name="day_of_week" required>
+                        {% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] %}
+                        <option value="{{ day }}"
+                            {% if cls.get('day_of_week') == day %}selected{% endif %}>{{ day }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="class_time" class="form-label">Class Time *</label>
+                    <input type="time" class="form-control" id="class_time" name="class_time"
+                           value="{{ cls.get('class_time','07:00')|hhmm }}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+                    <input type="number" class="form-control" id="duration_minutes"
+                           name="duration_minutes" value="{{ cls.get('duration_minutes', 60) }}"
+                           min="15" max="180">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="total_seats" class="form-label">Total Seats</label>
+                    <input type="number" class="form-control" id="total_seats"
+                           name="total_seats" value="{{ cls.get('total_seats', 20) }}"
+                           min="1" max="100">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="fee" class="form-label">Fee (₹)</label>
+                    <input type="number" class="form-control" id="fee" name="fee"
+                           value="{{ cls.get('fee', 0) }}" min="0" step="50">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="level" class="form-label">Level</label>
+                    <select class="form-select" id="level" name="level">
+                        {% for lvl in ['Beginner','Intermediate','Advanced','Restorative','All Levels'] %}
+                        <option value="{{ lvl }}" {% if cls.get('level') == lvl %}selected{% endif %}>{{ lvl }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="suggested_for" class="form-label">Suggested For (BMI)</label>
+                    <select class="form-select" id="suggested_for" name="suggested_for">
+                        {% for cat in ['All','Underweight','Normal','Overweight','Obese'] %}
+                        <option value="{{ cat }}" {% if cls.get('suggested_for') == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn-yoga-primary px-5 py-2">
+                    <i class="bi bi-check-lg me-1"></i> {{ action }} Class
+                </button>
+                <a href="{{ url_for('admin.classes') }}" class="btn-yoga-outline px-4 py-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

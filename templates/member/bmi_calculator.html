@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}BMI Calculator — YogaCare{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-calculator me-2"></i>BMI Calculator</h1>
+        <p>Calculate your Body Mass Index and get personalised yoga class suggestions.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+
+        <!-- Calculator Form -->
+        <div class="col-lg-5">
+            <div class="card-yoga">
+                <div class="card-header">⚖️ Enter Your Measurements</div>
+                <div class="card-body">
+                    <form method="POST" class="form-yoga">
+                        <div class="mb-3">
+                            <label for="bmi-weight" class="form-label">
+                                <i class="bi bi-clipboard-heart me-1" style="color:var(--primary);"></i>
+                                Weight (kg) *
+                            </label>
+                            <input type="number" class="form-control" id="bmi-weight"
+                                   name="weight" placeholder="e.g. 68" min="20" max="300"
+                                   step="0.1" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="bmi-height" class="form-label">
+                                <i class="bi bi-rulers me-1" style="color:var(--primary);"></i>
+                                Height (cm) *
+                            </label>
+                            <input type="number" class="form-control" id="bmi-height"
+                                   name="height" placeholder="e.g. 165" min="100" max="250"
+                                   step="0.1" required>
+                            <div id="bmi-live" class="mt-2 fw-bold"></div>
+                        </div>
+
+                        <button type="submit" class="btn-yoga-primary w-100 py-2">
+                            <i class="bi bi-calculator me-1"></i> Calculate BMI
+                        </button>
+                    </form>
+
+                    <!-- BMI Scale Reference -->
+                    <div class="mt-4 p-3 rounded-3" style="background:var(--light);">
+                        <p class="fw-bold mb-2 small">BMI Categories</p>
+                        <div class="d-flex flex-column gap-1" style="font-size:0.82rem;">
+                            <div><span style="color:#0dcaf0;">●</span> Underweight: &lt; 18.5</div>
+                            <div><span style="color:#198754;">●</span> Normal: 18.5 – 24.9</div>
+                            <div><span style="color:#fd7e14;">●</span> Overweight: 25.0 – 29.9</div>
+                            <div><span style="color:#dc3545;">●</span> Obese: ≥ 30.0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Column -->
+        <div class="col-lg-7">
+
+            {% if result %}
+            <!-- BMI Result Card -->
+            <div class="bmi-result-card mb-4 alert-{{ advice.color }}"
+                 style="background:linear-gradient(135deg,
+                    {% if advice.color == 'success' %}#198754,#28a745
+                    {% elif advice.color == 'warning' %}#d4701f,#fd7e14
+                    {% elif advice.color == 'danger'  %}#9b1c1c,#dc3545
+                    {% else %}#0a7f8b,#0dcaf0{% endif %});color:white;">
+                <div class="bmi-number">{{ result.bmi }}</div>
+                <h4 class="mt-2 fw-bold">{{ result.category }}</h4>
+                <p class="mb-0 mt-1" style="opacity:0.9;">{{ advice.message }}</p>
+            </div>
+
+            <!-- Yoga Tip -->
+            <div class="card-yoga mb-4">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">
+                        <i class="bi bi-lightbulb me-1" style="color:var(--accent);"></i>
+                        Recommended Yoga
+                    </h6>
+                    <p class="text-muted mb-0">{{ advice.yoga_tip }}</p>
+                </div>
+            </div>
+
+            <!-- Suggested Classes -->
+            {% if suggestions %}
+            <h6 class="fw-bold mb-3" style="color:var(--dark);">
+                🧘 Classes Recommended for You
+            </h6>
+            <div class="row g-3">
+                {% for cls in suggestions %}
+                <div class="col-12">
+                    <div class="card-yoga">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <div class="feature-icon" style="width:48px;height:48px;font-size:1.2rem;flex-shrink:0;">🧘</div>
+                            <div class="flex-grow-1">
+                                <strong>{{ cls.class_name }}</strong>
+                                <div class="text-muted small">
+                                    {{ cls.day_of_week }} · {{ cls.class_time|clock }} ·
+                                    <span class="badge bg-light text-dark border">{{ cls.level }}</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fee-badge mb-1">₹{{ "%.0f"|format(cls.fee) }}</div>
+                                <a href="{{ url_for('member.book', booking_type='class', item_id=cls.class_id) }}"
+                                   class="btn-yoga-primary px-3 py-1 d-block" style="font-size:0.8rem;">
+                                    Book
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card-yoga">
+                <div class="card-body text-center text-muted">
+                    <p>No specific class suggestions for this category right now. Browse all classes instead.</p>
+                    <a href="{{ url_for('member.classes') }}" class="btn-yoga-outline px-4 py-2">Browse All Classes</a>
+                </div>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <!-- Placeholder when no result yet -->
+            <div class="card-yoga" style="min-height:300px;display:flex;align-items:center;justify-content:center;">
+                <div class="text-center text-muted">
+                    <div style="font-size:4rem;">⚖️</div>
+                    <h5 class="mt-3">Your BMI result will appear here</h5>
+                    <p>Enter your weight and height, then click Calculate.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

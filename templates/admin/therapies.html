@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Therapy Services — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h1><i class="bi bi-heart-pulse me-2"></i>Therapy Services</h1>
+            <p>Manage all therapy services offered at the centre.</p>
+        </div>
+        <a href="{{ url_for('admin.add_therapy') }}" class="btn-yoga-primary px-4">
+            <i class="bi bi-plus-circle me-1"></i> Add Therapy
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card-yoga">
+        <div class="card-body p-0">
+            {% if therapies %}
+            <div class="table-responsive">
+                <table class="table table-yoga mb-0">
+                    <thead>
+                        <tr><th>#</th><th>Therapy Name</th><th>Description</th><th>Duration</th><th>Fee</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for t in therapies %}
+                        <tr>
+                            <td><small class="text-muted">{{ t.therapy_id }}</small></td>
+                            <td><strong>{{ t.therapy_name }}</strong></td>
+                            <td><small class="text-muted">{{ t.description[:70] if t.description else '—' }}{% if t.description and t.description|length > 70 %}…{% endif %}</small></td>
+                            <td>{{ t.duration_minutes }} min</td>
+                            <td>₹{{ "%.0f"|format(t.fee) }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.edit_therapy', therapy_id=t.therapy_id) }}"
+                                   class="btn btn-sm btn-outline-primary rounded-pill me-1">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="POST"
+                                      action="{{ url_for('admin.delete_therapy', therapy_id=t.therapy_id) }}"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill"
+                                            data-confirm="Deactivate this therapy?">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <div style="font-size:3rem;">💆</div>
+                <p class="mt-2">No therapies added yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

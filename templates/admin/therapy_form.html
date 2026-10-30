@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Therapy — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-heart-pulse me-2"></i>{{ action }} Therapy Service</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="form-card">
+        <form method="POST" class="form-yoga">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label for="therapy_name" class="form-label">Therapy Name *</label>
+                    <input type="text" class="form-control" id="therapy_name" name="therapy_name"
+                           value="{{ therapy.get('therapy_name','') }}" required
+                           placeholder="e.g. Abhyanga Oil Massage">
+                </div>
+                <div class="col-12">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4"
+                              placeholder="Detailed description of the therapy service…">{{ therapy.get('description','') }}</textarea>
+                </div>
+                <div class="col-md-6">
+                    <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+                    <input type="number" class="form-control" id="duration_minutes"
+                           name="duration_minutes" value="{{ therapy.get('duration_minutes', 60) }}"
+                           min="15" max="240">
+                </div>
+                <div class="col-md-6">
+                    <label for="fee" class="form-label">Fee (₹)</label>
+                    <input type="number" class="form-control" id="fee" name="fee"
+                           value="{{ therapy.get('fee', 0) }}" min="0" step="100">
+                </div>
+            </div>
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn-yoga-primary px-5 py-2">
+                    <i class="bi bi-check-lg me-1"></i> {{ action }} Therapy
+                </button>
+                <a href="{{ url_for('admin.therapies') }}" class="btn-yoga-outline px-4 py-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

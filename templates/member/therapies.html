@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Therapies — YogaCare{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-heart-pulse me-2"></i>Therapy Services</h1>
+        <p>Choose a healing therapy for body, mind, and spirit.</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if therapies %}
+    <div class="row g-4">
+        {% for t in therapies %}
+        <div class="col-md-6 col-lg-3">
+            <div class="class-card">
+                <div class="class-card-header"
+                     style="background:linear-gradient(135deg,#2a5f73 0%,var(--primary) 100%);">
+                    <h6 class="fw-bold mb-1" style="color:white;">{{ t.therapy_name }}</h6>
+                    <small style="color:rgba(255,255,255,0.75);">
+                        <i class="bi bi-clock me-1"></i>{{ t.duration_minutes }} minutes
+                    </small>
+                </div>
+                <div class="class-card-body">
+                    <p class="text-muted small mb-0">
+                        {{ t.description or 'No description available.' }}
+                    </p>
+                </div>
+                <div class="class-card-footer d-flex justify-content-between align-items-center">
+                    <span class="fee-badge">₹{{ "%.0f"|format(t.fee) }}</span>
+                    <a href="{{ url_for('member.book', booking_type='therapy', item_id=t.therapy_id) }}"
+                       class="btn-yoga-primary px-3 py-1" style="font-size:0.85rem;">
+                        Book <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5 text-muted">
+        <div style="font-size:3rem;">💆</div>
+        <p>No therapies available right now.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}My Sessions — Instructor{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-calendar3 me-2"></i>Assigned Sessions</h1>
+        <p>All approved bookings for your classes. Mark attendance below.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card-yoga">
+        <div class="card-body p-0">
+            {% if sessions %}
+            <div class="table-responsive">
+                <table class="table table-yoga mb-0">
+                    <thead>
+                        <tr>
+                            <th>Member</th><th>Class</th><th>Date</th>
+                            <th>Time</th><th>Attendance</th><th>Mark</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in sessions %}
+                        <tr>
+                            <td>
+                                <strong>{{ s.member_name }}</strong>
+                                <br><small class="text-muted">{{ s.member_email }}</small>
+                            </td>
+                            <td>
+                                {{ s.class_name }}
+                                <br><small class="badge bg-light text-dark border">{{ s.level }}</small>
+                            </td>
+                            <td>{{ s.session_date }}</td>
+                            <td>{{ s.time_slot|clock }}</td>
+                            <td>
+                                {% if s.attendance_id is not none %}
+                                    {% if s.is_present %}
+                                        <span class="badge-yoga badge-approved">Present ✓</span>
+                                    {% else %}
+                                        <span class="badge-yoga badge-rejected">Absent ✗</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-muted small">Not marked</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <!-- Only allow marking on/after session date -->
+                                {% if s.session_date|string <= today %}
+                                <button class="btn btn-sm btn-outline-primary rounded-pill"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#attendModal{{ s.booking_id }}">
+                                    <i class="bi bi-pencil-square"></i> Mark
+                                </button>
+
+                                <!-- Attendance Modal -->
+                                <div class="modal fade" id="attendModal{{ s.booking_id }}" tabindex="-1">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title fw-bold">Mark Attendance</h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form method="POST"
+                                                  action="{{ url_for('instructor.mark_attendance', booking_id=s.booking_id) }}">
+                                                <div class="modal-body form-yoga">
+                                                    <p class="small text-muted mb-3">
+                                                        <strong>{{ s.member_name }}</strong><br>
+                                                        {{ s.class_name }} — {{ s.session_date }}
+                                                    </p>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-600">Attendance</label>
+                                                        <select class="form-select" name="is_present">
+                                                            <option value="1" {% if s.is_present == 1 %}selected{% endif %}>✓ Present</option>
+                                                            <option value="0" {% if s.is_present == 0 and s.attendance_id %}selected{% endif %}>✗ Absent</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-0">
+                                                        <label class="form-label fw-600">Remarks</label>
+                                                        <input type="text" class="form-control" name="remarks"
+                                                               placeholder="Optional note…">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-sm btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                    <small class="text-muted">Upcoming</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <div style="font-size:3rem;">📅</div>
+                <p>No sessions assigned yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

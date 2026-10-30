@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Instructor Dashboard — YogaCare{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>🏅 Instructor Dashboard</h1>
+        <p>Welcome, {{ session.get('user_name') }}! Here are your sessions and stats.</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card stat-teal">
+                <div class="stat-icon">🧘</div>
+                <div class="stat-number">{{ my_classes|length }}</div>
+                <div class="stat-label">My Classes</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card stat-dark">
+                <div class="stat-icon">📅</div>
+                <div class="stat-number">{{ total_sessions }}</div>
+                <div class="stat-label">Total Sessions</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card stat-green">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number">{{ attended }}</div>
+                <div class="stat-label">Attended</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card stat-accent">
+                <div class="stat-icon">📆</div>
+                <div class="stat-number">{{ todays_sessions|length }}</div>
+                <div class="stat-label">Today's Sessions</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Today's Sessions -->
+        <div class="col-lg-7">
+            <div class="card-yoga">
+                <div class="card-header">📆 Today's Sessions</div>
+                <div class="card-body">
+                    {% if todays_sessions %}
+                        {% for s in todays_sessions %}
+                        <div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-3" style="background:var(--light);">
+                            <div style="font-size:1.8rem;">🧘</div>
+                            <div class="flex-grow-1">
+                                <strong>{{ s.member_name }}</strong>
+                                <div class="text-muted small">
+                                    {{ s.class_name }} ·
+                                    <i class="bi bi-clock me-1"></i>{{ s.time_slot|clock }}
+                                </div>
+                            </div>
+                            <span class="badge-yoga badge-approved">Approved</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <div style="font-size:2.5rem;">☀️</div>
+                            <p class="mt-2">No sessions scheduled for today.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- My Classes -->
+        <div class="col-lg-5">
+            <div class="card-yoga">
+                <div class="card-header">🧘 My Classes</div>
+                <div class="card-body">
+                    {% if my_classes %}
+                        {% for cls in my_classes %}
+                        <div class="mb-3 p-3 rounded-3 border">
+                            <strong>{{ cls.class_name }}</strong>
+                            <div class="text-muted small mt-1">
+                                <i class="bi bi-calendar3 me-1"></i>{{ cls.day_of_week }}
+                                <i class="bi bi-clock ms-2 me-1"></i>{{ cls.class_time|clock }}
+                                <span class="ms-2 badge bg-light text-dark border">{{ cls.level }}</span>
+                            </div>
+                            <div class="text-muted small">
+                                <i class="bi bi-people me-1"></i>{{ cls.total_seats }} seats per session
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center py-3">No classes assigned yet.</p>
+                    {% endif %}
+                    <a href="{{ url_for('instructor.sessions') }}" class="btn-yoga-outline d-block text-center py-2 mt-2">
+                        View All Sessions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

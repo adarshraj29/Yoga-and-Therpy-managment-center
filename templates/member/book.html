@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Book Session — YogaCare{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-calendar-plus me-2"></i>Book a Session</h1>
+        <p>Choose your preferred date and time slot.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+
+            <!-- Session Info Card -->
+            <div class="card-yoga mb-4">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div style="font-size:2.5rem;">{% if booking_type == 'class' %}🧘{% else %}💆{% endif %}</div>
+                    <div>
+                        {% if booking_type == 'class' %}
+                            <h5 class="fw-bold mb-1">{{ item.class_name }}</h5>
+                            <div class="text-muted small">
+                                <i class="bi bi-calendar3 me-1"></i>{{ item.day_of_week }}
+                                &nbsp;·&nbsp;
+                                <i class="bi bi-clock me-1"></i>{{ item.class_time|clock }}
+                                &nbsp;·&nbsp;{{ item.duration_minutes }} min
+                            </div>
+                            <div class="mt-1">
+                                <span class="badge bg-light text-dark border">{{ item.level }}</span>
+                                <span class="ms-2 text-muted small">
+                                    <i class="bi bi-people me-1"></i>{{ seats_left }} of {{ item.total_seats }} seats left on {{ next_date.strftime('%a %d %b') }}
+                                </span>
+                            </div>
+                        {% else %}
+                            <h5 class="fw-bold mb-1">{{ item.therapy_name }}</h5>
+                            <div class="text-muted small">
+                                <i class="bi bi-clock me-1"></i>{{ item.duration_minutes }} minutes
+                            </div>
+                        {% endif %}
+                        <div class="mt-2">
+                            <span class="fee-badge">₹{{ "%.0f"|format(item.fee) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <div class="form-card">
+                <h5 class="fw-bold mb-4" style="color:var(--dark);">Select Date & Time</h5>
+                <form method="POST" class="form-yoga">
+
+                    <div class="mb-4">
+                        <label for="session_date" class="form-label">
+                            <i class="bi bi-calendar3 me-1" style="color:var(--primary);"></i> Session Date *
+                        </label>
+                        <input type="date" class="form-control" id="session_date"
+                               name="session_date" min="{{ today }}"
+                               value="{{ next_date.isoformat() if booking_type == 'class' else '' }}" required>
+                        {% if booking_type == 'class' %}
+                        <div class="form-text">
+                            This class runs on <strong>{{ item.day_of_week }}s</strong> at
+                            <strong>{{ item.class_time|clock }}</strong>. Next session: {{ next_date.strftime('%A, %d %B') }}.
+                        </div>
+                        {% else %}
+                        <div class="form-text">Please select a future date.</div>
+                        {% endif %}
+                    </div>
+
+                    {% if booking_type == 'therapy' %}
+                    <div class="mb-4">
+                        <label for="time_slot" class="form-label">
+                            <i class="bi bi-clock me-1" style="color:var(--primary);"></i> Preferred Time Slot *
+                        </label>
+                        <select class="form-select" id="time_slot" name="time_slot" required>
+                            <option value="">— Choose a time slot —</option>
+                            {% for value, label in slots %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn-yoga-primary flex-fill py-2">
+                            <i class="bi bi-check-circle me-1"></i> Confirm Booking
+                        </button>
+                        <a href="{{ url_for('member.classes') if booking_type == 'class' else url_for('member.therapies') }}"
+                           class="btn-yoga-outline px-4 py-2">
+                            Cancel
+                        </a>
+                    </div>
+
+                    <div class="mt-3 p-3 rounded-3" style="background:rgba(42,157,143,0.08);font-size:0.82rem;color:var(--text-muted);">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Your booking will be reviewed by an admin. You'll see the status on "My Bookings".
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% if booking_type == 'class' %}
+<script>
+  // Only allow the weekday this class runs on (server also validates)
+  (function () {
+    var input = document.getElementById('session_date');
+    var allowed = {{ js_weekday }};
+    var dayName = "{{ item.day_of_week }}";
+    input.addEventListener('input', function () {
+      if (!input.value) { input.setCustomValidity(''); return; }
+      var parts = input.value.split('-');
+      var d = new Date(Date.UTC(+parts[0], +parts[1] - 1, +parts[2]));
+      input.setCustomValidity(d.getUTCDay() === allowed ? '' : 'Please pick a ' + dayName + '.');
+      input.reportValidity();
+    });
+  })();
+</script>
+{% endif %}
+{% endblock %}

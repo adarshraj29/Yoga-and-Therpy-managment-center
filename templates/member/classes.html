@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Yoga Classes — YogaCare{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-collection me-2"></i>Yoga Classes</h1>
+        <p>Choose a class that matches your level and goals.</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if classes %}
+    <div class="row g-4">
+        {% for cls in classes %}
+        <div class="col-md-6 col-lg-4">
+            <div class="class-card">
+                <div class="class-card-header">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h6 class="fw-bold mb-1" style="color:white;">{{ cls.class_name }}</h6>
+                        <span class="fee-badge">₹{{ "%.0f"|format(cls.fee) }}</span>
+                    </div>
+                    <small style="color:rgba(255,255,255,0.75);">
+                        <i class="bi bi-calendar3 me-1"></i>{{ cls.day_of_week }}
+                        &nbsp;·&nbsp;
+                        <i class="bi bi-clock me-1"></i>{{ cls.class_time|clock }}
+                        &nbsp;·&nbsp;{{ cls.duration_minutes }} min
+                    </small>
+                </div>
+                <div class="class-card-body">
+                    <p class="text-muted small mb-3">
+                        {{ cls.description or 'No description available.' }}
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <span class="badge bg-light text-dark border" style="font-size:0.75rem;">
+                            <i class="bi bi-signal me-1"></i>{{ cls.level }}
+                        </span>
+                        {% if cls.instructor_name %}
+                        <span class="badge bg-light text-dark border" style="font-size:0.75rem;">
+                            <i class="bi bi-person me-1"></i>{{ cls.instructor_name }}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="class-card-footer d-flex justify-content-between align-items-center">
+                    <span class="seats-badge {% if cls.seats_left == 0 %}seats-full{% endif %}"
+                          title="Seats left for the next session on {{ cls.next_date }}">
+                        <i class="bi bi-people me-1"></i>
+                        {% if cls.seats_left == 0 %}Next session FULL{% else %}{{ cls.seats_left }} seats left &middot; {{ cls.next_date.strftime('%d %b') }}{% endif %}
+                    </span>
+                    {% if cls.seats_left > 0 %}
+                    <a href="{{ url_for('member.book', booking_type='class', item_id=cls.class_id) }}"
+                       class="btn-yoga-primary px-3 py-1" style="font-size:0.85rem;">
+                        Book Now <i class="bi bi-arrow-right"></i>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('member.book', booking_type='class', item_id=cls.class_id) }}" class="btn btn-sm btn-outline-secondary rounded-pill">Pick another date</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5 text-muted">
+        <div style="font-size:3rem;">🧘</div>
+        <p>No classes available right now. Check back soon!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

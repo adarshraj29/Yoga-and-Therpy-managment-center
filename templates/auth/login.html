@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Login — YogaCare{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="min-height:80vh;display:flex;align-items:center;">
+    <div class="row w-100 justify-content-center">
+
+        <!-- Left decorative panel -->
+        <div class="col-lg-5 d-none d-lg-flex align-items-center justify-content-center"
+             style="background:linear-gradient(135deg,var(--dark) 0%,var(--primary) 100%);
+                    border-radius:var(--radius) 0 0 var(--radius);padding:3rem;min-height:520px;">
+            <div class="text-center text-white">
+                <div style="font-size:5rem;">🧘</div>
+                <h2 class="mt-3 fw-bold" style="color:white;">Welcome Back</h2>
+                <p style="color:rgba(255,255,255,0.8);font-size:0.95rem;margin-top:0.75rem;">
+                    Log in to manage your sessions, track your progress, and continue your wellness journey.
+                </p>
+                <hr style="border-color:rgba(255,255,255,0.3);margin:1.5rem 0;">
+                <p style="color:rgba(255,255,255,0.65);font-size:0.85rem;">
+                    Don't have an account?<br>
+                    <a href="{{ url_for('auth.register') }}"
+                       style="color:var(--accent);font-weight:700;">Register as a Member</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Login form -->
+        <div class="col-lg-5 col-md-8">
+            <div style="background:white;border-radius:0 var(--radius) var(--radius) 0;
+                        padding:2.5rem 2rem;box-shadow:var(--shadow);min-height:520px;
+                        display:flex;flex-direction:column;justify-content:center;">
+
+                <h3 class="fw-bold mb-1" style="color:var(--dark);">Sign In</h3>
+                <p class="text-muted mb-4" style="font-size:0.9rem;">Enter your credentials below</p>
+
+                <form method="POST" action="{{ url_for('auth.login') }}" class="form-yoga" id="loginForm">
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            <i class="bi bi-envelope me-1" style="color:var(--primary);"></i> Email Address
+                        </label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               placeholder="you@example.com" required autofocus>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">
+                            <i class="bi bi-lock me-1" style="color:var(--primary);"></i> Password
+                        </label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password"
+                                   name="password" placeholder="Your password" required>
+                            <button type="button" class="btn btn-outline-secondary"
+                                    onclick="togglePwd()" id="togglePwdBtn" title="Show/hide">
+                                <i class="bi bi-eye" id="pwdIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="loginBtn" class="btn-yoga-primary w-100 py-2" style="font-size:1rem;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </button>
+
+                </form>
+
+                <div class="demo-box mt-4">
+                    <div class="small text-muted mb-2"><i class="bi bi-lightning-charge-fill text-warning"></i> Demo accounts: click to sign in instantly</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" data-demo-email="admin@yogacenter.com" data-demo-pass="admin123"><i class="bi bi-shield-lock"></i> Admin</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" data-demo-email="priya@yogacenter.com" data-demo-pass="instructor123"><i class="bi bi-person-badge"></i> Instructor</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" data-demo-email="member@yogacenter.com" data-demo-pass="member123"><i class="bi bi-person"></i> Member</button>
+                    </div>
+                </div>
+
+                <p class="text-center mt-4 mb-0" style="font-size:0.88rem;color:var(--text-muted);">
+                    New member?
+                    <a href="{{ url_for('auth.register') }}" class="fw-600" style="color:var(--primary);font-weight:600;">
+                        Create a free account
+                    </a>
+                </p>
+
+                <!-- Demo credentials hint (remove in production) -->
+                <div class="mt-4 p-3 rounded-3" style="background:var(--light);font-size:0.8rem;">
+                    <p class="fw-bold mb-1" style="color:var(--dark);">Demo Credentials</p>
+                    <p class="mb-0">Admin: <code>admin@yogacenter.com</code> / <code>admin123</code></p>
+                    <p class="mb-0">Member: <code>member@yogacenter.com</code> / <code>member123</code></p>
+                    <p class="mb-0">Instructor: <code>priya@yogacenter.com</code> / <code>instructor123</code></p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function togglePwd() {
+    const inp  = document.getElementById('password');
+    const icon = document.getElementById('pwdIcon');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+    } else {
+        inp.type = 'password';
+        icon.className = 'bi bi-eye';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Feedback — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-star me-2"></i>Member Feedback</h1>
+        <p>Read feedback and ratings submitted by members.</p>
+    </div>
+</div>
+<div class="container">
+    <div class="row g-4">
+        {% if feedback %}
+            {% for f in feedback %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card-yoga h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <strong>{{ f.member_name }}</strong>
+                            <div>
+                                {% for i in range(f.rating) %}⭐{% endfor %}
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-2">
+                            {% if f.class_name %}🧘 {{ f.class_name }}
+                            {% elif f.therapy_name %}💆 {{ f.therapy_name }}
+                            {% else %}General{% endif %}
+                        </p>
+                        <p class="small mb-0">
+                            {{ f.comments or '<em class="text-muted">No comments.</em>' }}
+                        </p>
+                        <hr class="my-2">
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i>
+                            {{ f.submitted_at.strftime('%d %b %Y, %I:%M %p') if f.submitted_at else '' }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5 text-muted">
+                <div style="font-size:3rem;">⭐</div>
+                <p>No feedback submitted yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

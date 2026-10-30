@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — YogaCare{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h1>
+        <p>Welcome back, {{ session.get('user_name') }}! Here's what's happening today.</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ── Stat Cards ── -->
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="stat-card stat-teal">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">{{ member_count }}</div>
+                <div class="stat-label">Registered Members</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card stat-dark">
+                <div class="stat-icon">🧘</div>
+                <div class="stat-number">{{ class_count }}</div>
+                <div class="stat-label">Active Classes</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card stat-green">
+                <div class="stat-icon">💆</div>
+                <div class="stat-number">{{ therapy_count }}</div>
+                <div class="stat-label">Therapy Services</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card stat-accent">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number">{{ pending_count }}</div>
+                <div class="stat-label">Pending Approvals</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Second row: Total Bookings + Instructors ── -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card-yoga">
+                <div class="card-body d-flex align-items-center gap-4">
+                    <div class="feature-icon" style="width:56px;height:56px;font-size:1.4rem;flex-shrink:0;">📅</div>
+                    <div>
+                        <div style="font-size:2rem;font-weight:700;font-family:'Poppins',sans-serif;color:var(--dark);">
+                            {{ total_bookings }}
+                        </div>
+                        <div class="text-muted" style="font-size:0.9rem;">Total Bookings (All Time)</div>
+                    </div>
+                    <a href="{{ url_for('admin.bookings') }}" class="ms-auto btn-yoga-outline" style="white-space:nowrap;">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-yoga">
+                <div class="card-body d-flex align-items-center gap-4">
+                    <div class="feature-icon" style="width:56px;height:56px;font-size:1.4rem;flex-shrink:0;">🏅</div>
+                    <div>
+                        <div style="font-size:2rem;font-weight:700;font-family:'Poppins',sans-serif;color:var(--dark);">
+                            {{ instructor_count }}
+                        </div>
+                        <div class="text-muted" style="font-size:0.9rem;">Active Instructors</div>
+                    </div>
+                    <a href="{{ url_for('admin.instructors') }}" class="ms-auto btn-yoga-outline" style="white-space:nowrap;">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Quick Actions ── -->
+    <div class="card-yoga mb-4">
+        <div class="card-header">⚡ Quick Actions</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <a href="{{ url_for('admin.add_class') }}" class="btn-yoga-primary d-block text-center py-2">
+                        <i class="bi bi-plus-circle me-1"></i> Add Class
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="{{ url_for('admin.add_therapy') }}" class="btn-yoga-primary d-block text-center py-2">
+                        <i class="bi bi-plus-circle me-1"></i> Add Therapy
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="{{ url_for('admin.add_instructor') }}" class="btn-yoga-primary d-block text-center py-2">
+                        <i class="bi bi-person-plus me-1"></i> Add Instructor
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="{{ url_for('admin.bookings') }}?status=pending" class="btn-yoga-outline d-block text-center py-2">
+                        <i class="bi bi-clock me-1"></i> Pending ({{ pending_count }})
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Recent Bookings ── -->
+    <div class="card-yoga">
+        <div class="card-header">📋 Recent Bookings</div>
+        <div class="card-body p-0">
+            {% if recent_bookings %}
+            <div class="table-responsive">
+                <table class="table table-yoga mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Member</th>
+                            <th>Session</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in recent_bookings %}
+                        <tr>
+                            <td><small class="text-muted">#{{ b.booking_id }}</small></td>
+                            <td>
+                                <strong>{{ b.member_name }}</strong>
+                                <br><small class="text-muted">{{ b.member_email }}</small>
+                            </td>
+                            <td>
+                                {% if b.class_name %}
+                                    <i class="bi bi-collection text-primary-yoga me-1"></i>{{ b.class_name }}
+                                {% elif b.therapy_name %}
+                                    <i class="bi bi-heart-pulse text-primary-yoga me-1"></i>{{ b.therapy_name }}
+                                {% endif %}
+                            </td>
+                            <td>{{ b.session_date }}</td>
+                            <td>
+                                <span class="badge-yoga badge-{{ b.status }}">{{ b.status|title }}</span>
+                            </td>
+                            <td>
+                                {% if b.status == 'pending' %}
+                                    <form method="POST" action="{{ url_for('admin.update_booking', booking_id=b.booking_id, action='approve') }}" class="d-inline">
+                                        <button class="btn btn-sm btn-success rounded-pill">Approve</button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin.update_booking', booking_id=b.booking_id, action='reject') }}" class="d-inline ms-1">
+                                        <button class="btn btn-sm btn-danger rounded-pill">Reject</button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted small">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <div style="font-size:3rem;">📅</div>
+                <p class="mt-2">No bookings yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
